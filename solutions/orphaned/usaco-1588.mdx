@@ -1,0 +1,117 @@
+---
+id: usaco-1588
+source: USACO Bronze 2026 Third Contest
+title: Strange Function
+author: Yiqiao Zhao
+---
+
+We found the following solution metadata for this problem:
+```
+[
+  {
+    "kind": "link",
+    "label": "External Sol",
+    "url": "http://www.usaco.org/current/data/sol_prob2_bronze_season26contest3.html"
+  }
+]
+```
+
+When adding an internal solution, you have to update relevant modules to point to this new internal solution. This process is partially automated; modules containing this problem have been updated in the editor (see file list to the left).
+
+## Explanation
+
+First, it is notable realizing that an input $x$ of $10^{2\cdot10^5}$ is such a large input that there is no hope of any time complexity above $\mathcal{O}(\log x)$ (Especially considering that $2\cdot10^5$ is one of the most common USACO linear input bounds), so the solution should ideally have a constant time operation for each character.
+
+It is easier to visualize the problem starting with a binary string first, as any input that is not a purely binary string will become one in exactly 1 operation.
+
+Starting with $x$ being a strictly binary string, we can observe that an application of $f(x)$ is always a subtraction by 1. This results in the rightmost 1 in $x$ being set to 0, and all zeroes to the right of that 1 being set to 9. It is also important that this $f(x)$ only affects the digits after the rightmost 1 of $x$, so that we can use preprocessing for the answer.
+
+
+
+Use `\texttt{}` around variable names with length *greater than one*, like so. Place long equations on separate lines with display math, and use `\cdot` instead of `*` to denote multiplication.
+
+$$
+\texttt{arr}[i]=2\cdot (a+b+c+d+e)+\sum_{j=0}^{i-1}\texttt{arr}[j]
+$$
+
+Some additional text styles which you might consider using:
+
+http://latexref.xyz/Font-styles.html
+
+http://applied-r.com/latex-font-styles/
+
+$func(var)$
+
+$\textit{func(var)}$
+
+$\textrm{func(var)}$
+
+$\text{func(var)}$
+
+$\textsf{func(var)}$
+
+$\textbf{func(var)}$
+
+$\texttt{func(var)}$
+
+## Implementation
+
+**Time Complexity:** $\mathcal{O}(\log x)$
+
+<LanguageSection>
+
+<CPPSection>
+
+```#include <bits/stdc++.h>
+using namespace std;
+
+#define MOD 1000000007
+#define ll long long
+ll toresolve[200000] = {1,3};
+
+void solve(){
+    string s; cin >> s;
+    ll size = s.size();
+    bool binary = true;
+    ll totalOps = 0;
+
+    for(int i = size-1; i > -1; i--){
+        if(binary){
+            if(s[i] - '0' > 1){
+                binary = false;
+                totalOps++;
+            }
+        }
+        if(s[i]&1){
+            totalOps = (totalOps+toresolve[size-i-1])%MOD;
+        }
+    }
+    cout<<totalOps<<'\n';
+}
+int main(){
+    for(int i = 2; i < 200000; i++){
+        toresolve[i] = (toresolve[i-1] * 2) % MOD;
+    }
+    int t; cin>>t;
+    while(t--){
+        solve();
+    }
+    return 0;
+}
+```
+
+</CPPSection>
+
+<PySection>
+
+(if you have Python code)
+
+</PySection>
+
+<JavaSection>
+
+(if you have Java code)
+
+</JavaSection>
+
+</LanguageSection>
